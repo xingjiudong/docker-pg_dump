@@ -1,9 +1,7 @@
-FROM postgres:latest
-MAINTAINER Cristoffer Fairweather <cfairweather@annixa.com> # Previously Ilya Stepanov <dev@ilyastepanov.com>
+FROM postgres:9.6-alpine
+MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
-RUN apt-get update && \
-    apt-get install -y cron && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN  apk add --no-cache cron
 
 ADD dump.sh /dump.sh
 RUN chmod +x /dump.sh
