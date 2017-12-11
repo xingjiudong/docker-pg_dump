@@ -3,8 +3,8 @@ MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
 ENV CONFD_VERSION 0.11.0 
 
-RUN set -x && apk add --update --no-cache dcron 
-RUN wget https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 \
+RUN set -x && apk add --update --no-cache dcron wget
+RUN wget https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 --no-check-certificate \
     && chmod +x confd-${CONFD_VERSION}-linux-amd64 \
     && mv confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
 
