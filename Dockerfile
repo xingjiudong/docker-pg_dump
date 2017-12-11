@@ -1,10 +1,15 @@
 FROM postgres:9.6-alpine
 MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
-RUN set -x && apk add --update --no-cache dcron
+ENV CONFD_VERSION 0.11.0 
 
-ADD dump.sh /dump.sh
-RUN chmod +x /dump.sh
+RUN set -x \
+    && apk add --update --no-cache dcron \
+    && wget https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 --no-check-certificate \
+    && chmod +x confd-${CONFD_VERSION}-linux-amd64 \
+    && mv confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
+
+ADD confd /etc/confd
 
 ADD start.sh /start.sh
 RUN chmod +x /start.sh

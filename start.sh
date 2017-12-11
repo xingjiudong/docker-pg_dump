@@ -9,6 +9,11 @@ export PGUSER=${PGUSER:-postgres}
 export PGDB=${PGDB:-postgres}
 export PGHOST=${PGHOST:-db}
 export PGPORT=${PGPORT:-5432}
+export ETCD_CLIENT_IP=${ETCD_CLIENT_IP:-127.0.0.1}
+export PROJECT_NAME=${PROJECT_NAME:-dump}
+
+confd -onetime -backend etcd -node http://${ETCD_CLIENT_IP}:2379 --prefix="/postgres-config/${PROJECT_NAME}"
+chmod +x /dump.sh
 
 if [[ "$COMMAND" == 'dump' ]]; then
     exec /dump.sh
