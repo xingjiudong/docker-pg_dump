@@ -1,9 +1,7 @@
 FROM postgres:9.6-alpine
 MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
-RUN set -ex \
-	\
-        && apk --update add --no-cache cron
+RUN apk --update add cron
 
 ADD dump.sh /dump.sh
 RUN chmod +x /dump.sh
