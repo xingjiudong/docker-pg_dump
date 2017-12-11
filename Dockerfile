@@ -1,4 +1,4 @@
-FROM postgres:9.6-alpine
+FROM postgres:10-alpine
 MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
 ENV CONFD_VERSION 0.11.0 
