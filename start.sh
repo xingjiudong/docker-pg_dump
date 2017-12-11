@@ -2,13 +2,13 @@
 
 set -e
 
-COMMAND=${1:-dump}
-CRON_SCHEDULE=${CRON_SCHEDULE:-0 1 * * *}
+export COMMAND=${1:-dump}
+export CRON_SCHEDULE=${CRON_SCHEDULE:-0 1 * * *}
 export PREFIX=${PREFIX:-dump}
-PGUSER=${PGUSER:-postgres}
-PGDB=${PGDB:-postgres}
-PGHOST=${PGHOST:-db}
-PGPORT=${PGPORT:-5432}
+export PGUSER=${PGUSER:-postgres}
+export PGDB=${PGDB:-postgres}
+export PGHOST=${PGHOST:-db}
+export PGPORT=${PGPORT:-5432}
 
 if [[ "$COMMAND" == 'dump' ]]; then
     exec /dump.sh
