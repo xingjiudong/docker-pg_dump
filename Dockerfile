@@ -1,7 +1,7 @@
 FROM postgres:9.6-alpine
 MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
-RUN apk update && apk add dcron
+RUN set -x && apk add --update --no-cache bash dcron
 
 ADD dump.sh /dump.sh
 RUN chmod +x /dump.sh
