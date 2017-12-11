@@ -3,7 +3,7 @@ MAINTAINER xingjiudong <xing.jiudong@trans-cosmos.com.cn>
 
 RUN set -ex \
 	\
-        && apk add --no-cache cron
+        && apk --update add --no-cache cron
 
 ADD dump.sh /dump.sh
 RUN chmod +x /dump.sh
