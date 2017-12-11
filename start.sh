@@ -29,7 +29,7 @@ elif [[ "$COMMAND" == 'dump-cron' ]]; then
     
     echo -e "$CRON_ENV\n$CRON_SCHEDULE /dump.sh > $LOGFIFO 2>&1" | crontab -
     crontab -l
-    cron
+    crond
     tail -f "$LOGFIFO"
 else
     echo "Unknown command $COMMAND"
