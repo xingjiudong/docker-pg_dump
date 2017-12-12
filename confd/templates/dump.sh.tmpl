@@ -13,7 +13,7 @@ FILE="/dump/$PREFIX-{{$data := json .Value}}{{$data.PGHOST}}-$DATE.sql"
 
 if [ ! -z "$DELETE_OLDER_THAN" ]; then
 	echo "Deleting old backups: $DELETE_OLDER_THAN"
-	find /dump/* -mmin "+$DELETE_OLDER_THAN" -exec rm {} \;
+	find /dump/* -mtime "+$DELETE_OLDER_THAN" -exec rm {} \;
 fi
 
 echo "Job finished: $(date)"
