@@ -5,10 +5,6 @@ set -e
 export COMMAND=${1:-dump}
 export CRON_SCHEDULE=${CRON_SCHEDULE:-0 1 * * *}
 export PREFIX=${PREFIX:-dump}
-export PGUSER=${PGUSER:-postgres}
-export PGDB=${PGDB:-postgres}
-export PGHOST=${PGHOST:-db}
-export PGPORT=${PGPORT:-5432}
 export ETCD_CLIENT_IP=${ETCD_CLIENT_IP:-127.0.0.1}
 export PROJECT_NAME=${PROJECT_NAME:-dump}
 
@@ -22,10 +18,7 @@ elif [[ "$COMMAND" == 'dump-cron' ]]; then
     if [[ ! -e "$LOGFIFO" ]]; then
         mkfifo "$LOGFIFO"
     fi
-    CRON_ENV="PREFIX='$PREFIX'\nPGUSER='$PGUSER'\nPGDB='$PGDB'\nPGHOST='$PGHOST'\nPGPORT='$PGPORT'"
-    if [ -n "$PGPASSWORD" ]; then
-        CRON_ENV="$CRON_ENV\nPGPASSWORD='$PGPASSWORD'"
-    fi
+    CRON_ENV="PREFIX='$PREFIX'"
     
     if [ ! -z "$DELETE_OLDER_THAN" ]; then
     	CRON_ENV="$CRON_ENV\nDELETE_OLDER_THAN='$DELETE_OLDER_THAN'"
