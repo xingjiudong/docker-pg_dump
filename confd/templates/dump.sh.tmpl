@@ -7,7 +7,7 @@ echo "Job started: $(date)"
 
 DATE=$(date +%Y%m%d_%H%M%S)
 FILE="/dump/$PREFIX-{{$data := json .Value}}{{$data.PGHOST}}-$DATE.sql"
-PGPASSWORD={{$data := json .Value}}{{$data.PGPASSWORD}}
+export PGPASSWORD="{{$data := json .Value}}{{$data.PGPASSWORD}}"
 
     pg_dump -h "{{$data := json .Value}}{{$data.PGHOST}}" -p "{{$data := json .Value}}{{$data.PGPORT}}" -U "{{$data := json .Value}}{{$data.PGUSER}}" -f "$FILE" -d "{{$data := json .Value}}{{$data.PGDB}}"
     gzip "$FILE"
