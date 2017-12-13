@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -o pipefail
 
 {{range $dir := gets "/*"}}
 export PGPASSWORD="{{$data := json .Value}}{{$data.PGPASSWORD}}"
