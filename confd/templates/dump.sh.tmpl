@@ -1,20 +1,31 @@
 #!/bin/bash
 
-set -e
+set -o pipefail
 
 {{range $dir := gets "/*"}}
-echo "Job started: $(date)"
 
+# --------------------------cut-off rule-------------------------------
+# Env for postgresDB
+export PGHOST="{{$data := json .Value}}{{$data.PGHOST}}"
+export PGPORT="{{$data := json .Value}}{{$data.PGPORT}}"
+export PGUSER="{{$data := json .Value}}{{$data.PGUSER}}"
+export PGPASSWORD="{{$data := json .Value}}{{$data.PGPASSWORD}}"
+export PGDB="{{$data := json .Value}}{{$data.PGDB}}"
+
+echo "Job ${PGHOST}-${PGDB} started: $(date)"
 DATE=$(date +%Y%m%d_%H%M%S)
-FILE="/dump/$PREFIX-{{$data := json .Value}}{{$data.PGHOST}}-$DATE.sql"
+FILE="/dump/${PREFIX}-${PGHOST}-${PGDB}-${DATE}.sql"
+backups_num=$(find /dump/${PREFIX}-${PGHOST}-${PGDB}* -exec ls -l {} \; | wc -l)
 
-    pg_dump -h "{{$data := json .Value}}{{$data.PGHOST}}" -p "{{$data := json .Value}}{{$data.PGPORT}}" -U "{{$data := json .Value}}{{$data.PGUSER}}" -f "$FILE" -d "{{$data := json .Value}}{{$data.PGDB}}"
-    gzip "$FILE"
+    pg_dump -h ${PGHOST} -p ${PGPORT} -U ${PGUSER} -f ${FILE} -d ${PGDB}
+    gzip "${FILE}"
 
-if [ ! -z "$DELETE_OLDER_THAN" ]; then
-	echo "Deleting old backups: $DELETE_OLDER_THAN"
-	find /dump/* -mmin "+$DELETE_OLDER_THAN" -exec rm {} \;
+if [ ! -z "${DELETE_OLDER_THAN}" ]&&[ ${backups_num} -gt 3 ]; then
+        echo "Deleting old backups: $DELETE_OLDER_THAN"
+        find /dump/${PREFIX}-${PGHOST}-${PGDB}* -mtime "+$DELETE_OLDER_THAN" -exec rm {} \;
+   else
+        echo "The number of backups is less than the number of security!"
 fi
+echo "Job ${PGHOST}-${PGDB} finished: $(date)"
 
-echo "Job finished: $(date)"
 {{end}}
