@@ -3,19 +3,24 @@
 set -e
 
 {{range $dir := gets "/*"}}
-echo "Job started: $(date)"
+export PGPASSWORD="{{$data := json .Value}}{{$data.PGPASSWORD}}"
+export PGHOST="{{$data := json .Value}}{{$data.PGHOST}}"
+export PGPORT="{{$data := json .Value}}{{$data.PGPORT}}"
+export PGUSER="{{$data := json .Value}}{{$data.PGUSER}}"
+export PGDB="{{$data := json .Value}}{{$data.PGDB}}"
+
+echo "Job ${PGHOST}-${PGDB} started: $(date)"
 
 DATE=$(date +%Y%m%d_%H%M%S)
-FILE="/dump/$PREFIX-{{$data := json .Value}}{{$data.PGHOST}}-$DATE.sql"
-export PGPASSWORD="{{$data := json .Value}}{{$data.PGPASSWORD}}"
+FILE="/dump/${PREFIX}-${PGHOST}-${PGDB}-${DATE}.sql"
 
-    pg_dump -h "{{$data := json .Value}}{{$data.PGHOST}}" -p "{{$data := json .Value}}{{$data.PGPORT}}" -U "{{$data := json .Value}}{{$data.PGUSER}}" -f "$FILE" -d "{{$data := json .Value}}{{$data.PGDB}}"
-    gzip "$FILE"
+    pg_dump -h ${PGHOST} -p "{{$data := json .Value}}{{$data.PGPORT}}" -U "{{$data := json .Value}}{{$data.PGUSER}}" -f "$FILE" -d "{{$data := json .Value}}{{$data.PGDB}}"
+    gzip "${FILE}"
 
 if [ ! -z "$DELETE_OLDER_THAN" ]; then
 	echo "Deleting old backups: $DELETE_OLDER_THAN"
 	find /dump/* -mtime "+$DELETE_OLDER_THAN" -exec rm {} \;
 fi
 
-echo "Job finished: $(date)"
+echo "Job ${PGHOST}-${PGDB} finished: $(date)"
 {{end}}
