@@ -19,13 +19,10 @@ FILE="/dump/${PREFIX}-${PGHOST}-${PGDB}-${DATE}.sql"
     pg_dump -h ${PGHOST} -p ${PGPORT} -U ${PGUSER} -f ${FILE} -d ${PGDB}
     gzip "${FILE}"
 
+if [ ! -z "$DELETE_OLDER_THAN" ]; then
+	echo "Deleting old backups: $DELETE_OLDER_THAN"
+	find /dump/${PREFIX}-${PGHOST}-${PGDB}* -mtime "+$DELETE_OLDER_THAN" -exec rm {} \;
+fi
 echo "Job ${PGHOST}-${PGDB} finished: $(date)"
 
 {{end}}
-
-echo "Job Deleting old backups start"
-if [ ! -z "$DELETE_OLDER_THAN" ]; then
-	echo "Deleting old backups: $DELETE_OLDER_THAN"
-	find /dump/* -mtime "+$DELETE_OLDER_THAN" -exec rm {} \;
-fi
-echo "Job Deleting old backups finished"
