@@ -12,7 +12,7 @@ export PGUSER="{{$data := json .Value}}{{$data.PGUSER}}"
 export PGPASSWORD="{{$data := json .Value}}{{$data.PGPASSWORD}}"
 export PGDB="{{$data := json .Value}}{{$data.PGDB}}"
 
-echo "$(date +%Y-%m-%d:%H:%M:%S) Job ${PGHOST}-${PGDB} started"
+echo "$(date +%Y-%m-%d:%H:%M:%S) Job started: ${PGHOST}-${PGDB}"
 DATE=$(date +%Y%m%d_%H%M%S)
 FILE="/dump/${PREFIX}-${PGHOST}-${PGDB}-${DATE}.sql"
 backups_num=$(find /dump/${PREFIX}-${PGHOST}-${PGDB}* -exec ls -l {} \; | wc -l)
@@ -27,6 +27,6 @@ if [ ! -z "${DELETE_OLDER_THAN}" ]&&[ ${backups_num} -gt 3 ]; then
    else
         echo "$(date +%Y-%m-%d:%H:%M:%S) The number of backups is less than the number of security!"
 fi
-echo "$(date +%Y-%m-%d:%H:%M:%S) Job ${PGHOST}-${PGDB} finished"
+echo "$(date +%Y-%m-%d:%H:%M:%S) Job finished: ${PGHOST}-${PGDB}"
 
 {{end}}
